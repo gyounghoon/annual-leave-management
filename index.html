@@ -115,7 +115,7 @@
         // 남은 연차 데이터를 불러오는 함수
         async function fetchRemainingLeaves() {
   try {
-    const response = await fetch('/api/get/', {
+    const response = await fetch('/api/get/exec', {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
