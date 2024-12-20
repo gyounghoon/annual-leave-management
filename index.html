@@ -69,6 +69,14 @@
             border-radius: 8px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
+        a {
+            color: #0056b3;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
         @media (max-width: 600px) {
             form {
                 width: 90%;
@@ -79,12 +87,14 @@
         }
     </style>
 </head>
-<body onload="fetchRemainingLeaves()">
+<body>
     <h1>연차 신청</h1>
 
-    <!-- 남은 연차를 표시할 영역 -->
+    <!-- 남은 연차 링크 -->
     <div id="leaveList">
-        <p>남은 연차 데이터를 불러오는 중...</p>
+        <p><a href="https://script.google.com/a/macros/romantax.biz/s/AKfycbyADj5n7N4S_f_Ry7ArEcxIvubrh5bf_uPjHsCX3-m8wAnXcn4NyZgf0qqu_5FkSI18/exec" target="_blank">
+            남은 연차 보러가기
+        </a></p>
     </div>
 
     <form id="leaveRequestForm">
@@ -111,45 +121,10 @@
         <p class="form-footer">* 모든 필수 항목을 입력해주세요.</p>
     </form>
 
+
+
     <script>
-        // 남은 연차 데이터를 불러오는 함수
-        async function fetchRemainingLeaves() {
-  try {
-    const response = await fetch('/api/get/exec', {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      mode: 'cors', // CORS 모드 활성화
-    });
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    console.log('받은 데이터:', data);
-    displayLeaves(data);
-  } catch (error) {
-    console.error('연차 데이터를 불러오는데 실패했습니다:', error);
-  }
-}
-
-
-
-
-
-        // 데이터를 HTML에 표시하는 함수
-        function displayLeaves(data) {
-            const leaveList = document.getElementById('leaveList');
-            leaveList.innerHTML = ''; // 기존 데이터를 초기화
-
-            data.forEach(item => {
-                const row = document.createElement('div');
-                row.textContent = `${item.name}: 남은 연차 ${item.remaining}일`;
-                leaveList.appendChild(row);
-            });
-        }
 
         // 폼 제출 이벤트
         const form = document.getElementById('leaveRequestForm');
