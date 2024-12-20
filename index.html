@@ -79,7 +79,7 @@
         }
     </style>
 </head>
-<body onload="loadRemainingLeaves()">
+<body onload="fetchRemainingLeaves()">
     <h1>연차 신청</h1>
 
     <!-- 남은 연차를 표시할 영역 -->
@@ -113,8 +113,25 @@
 
     <script>
         // 남은 연차 데이터를 불러오는 함수
-        function loadRemainingLeaves() {
-            google.script.run.withSuccessHandler(displayLeaves).getRemainingLeaves();
+        async function fetchRemainingLeaves() {
+            try {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbyZj3xwIDAZra4BvHd_Mm5EicrZWuc3NbrUWQtDrhj4wvjvfjuvyiwIMGCJOu_xkxCF/exec', { // 여기에 실제 웹 앱 URL 입력
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('받은 데이터:', data);
+                displayLeaves(data);
+            } catch (error) {
+                console.error('연차 데이터를 불러오는데 실패했습니다:', error);
+            }
         }
 
         // 데이터를 HTML에 표시하는 함수
