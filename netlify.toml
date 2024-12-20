@@ -2,3 +2,11 @@
   from = "/api/*"
   to = "https://script.google.com/macros/s/AKfycbzEjKnyPdMddDS35Tt_scPMU-Urs7byM8vaRIfJrYK8lTgLqIkfv2HJyveqSfHPhbv8/exec/:splat"
   status = 200
+
+
+  [[headers]]
+  for = "/api/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
+    Access-Control-Allow-Headers = "Content-Type"
