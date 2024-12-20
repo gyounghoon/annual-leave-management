@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>연차 신청</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f9;
+        }
+        h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #333;
+        }
+        form {
+            max-width: 400px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #555;
+        }
+        input, textarea, select, button {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        input:focus, textarea:focus, select:focus {
+            border-color: #0056b3;
+            outline: none;
+        }
+        button {
+            width: 95%;
+            background-color: #0056b3;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            padding: 12px;
+        }
+        button:hover {
+            background-color: #004494;
+        }
+        .form-footer {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        #leaveList {
+            max-width: 400px;
+            margin: 0 auto 20px;
+            padding: 10px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        @media (max-width: 600px) {
+            form {
+                width: 90%;
+            }
+            input, textarea, select, button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body onload="loadRemainingLeaves()">
+    <h1>연차 신청</h1>
+
+    <!-- 남은 연차를 표시할 영역 -->
+    <div id="leaveList">
+        <p>남은 연차 데이터를 불러오는 중...</p>
+    </div>
+
+    <form id="leaveRequestForm">
+        <label for="name">이름</label>
+        <input type="text" id="name" name="name" placeholder="이름을 입력하세요" required>
+
+        <label for="leaveType">연차 종류</label>
+        <select id="leaveType" name="leaveType" required>
+            <option value="" disabled selected>연차 종류를 선택하세요</option>
+            <option value="연차">연차</option>
+            <option value="반차">반차</option>
+        </select>
+
+        <label for="startDate">시작 날짜</label>
+        <input type="date" id="startDate" name="startDate" required>
+
+        <label for="endDate">종료 날짜</label>
+        <input type="date" id="endDate" name="endDate" required>
+
+        <label for="reason">사유 (선택)</label>
+        <textarea id="reason" name="reason" rows="4" placeholder="연차 사유를 입력하세요 (선택)"></textarea>
+
+        <button type="submit">신청</button>
+        <p class="form-footer">* 모든 필수 항목을 입력해주세요.</p>
+    </form>
+
+    <script>
+        // 남은 연차 데이터를 불러오는 함수
+        function loadRemainingLeaves() {
+            google.script.run.withSuccessHandler(displayLeaves).getRemainingLeaves();
+        }
+
+        // 데이터를 HTML에 표시하는 함수
+        function displayLeaves(data) {
+            const leaveList = document.getElementById('leaveList');
+            leaveList.innerHTML = ''; // 기존 데이터를 초기화
+
+            data.forEach(item => {
+                const row = document.createElement('div');
+                row.textContent = `${item.name}: 남은 연차 ${item.remaining}일`;
+                leaveList.appendChild(row);
+            });
+        }
+
+        // 폼 제출 이벤트
+        const form = document.getElementById('leaveRequestForm');
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            console.log("전송 데이터:", data); // 디버깅용 출력
+
+            try {
+                await fetch('api/exec', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data),
+                });
+
+                // 성공적으로 데이터 전송 후 사용자 피드백
+                alert('연차 신청이 완료되었습니다!');
+                form.reset();
+            } catch (error) {
+                console.error("Error 발생:", error);
+            }
+        });
+    </script>
+</body>
+</html>
