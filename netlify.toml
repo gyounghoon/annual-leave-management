@@ -4,6 +4,12 @@
   status = 200
   force = true
 
+[[redirects]]
+  from = "/api/*"
+  to = "https://script.google.com/macros/s/AKfycbyjaOwu7pM6fCZQ3KYqut7zqwRKeUN1yCoToBaghPS1hzTWZ9ibkNwajC4yAmPaoncv/exec/:splat"
+  status = 200
+  force = true
+
 [[headers]]
   for = "/api/*"
   [headers.values]
