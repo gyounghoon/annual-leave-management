@@ -1,6 +1,6 @@
 [[redirects]]
   from = "/api/*"
-  to = "https://script.google.com/macros/s/AKfycbzNUu6zYDZV6sPZDmn7wHVrW7sMugVVNlxbc-UtxrL6MhbUmWVYNXuMRqu4i4AAOzTU/exec/:splat"
+  to = "https://script.google.com/macros/s/AKfycbzEjKnyPdMddDS35Tt_scPMU-Urs7byM8vaRIfJrYK8lTgLqIkfv2HJyveqSfHPhbv8/exec/:splat"
   status = 200
   force = true
 
