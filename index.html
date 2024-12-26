@@ -77,6 +77,22 @@
         a:hover {
             text-decoration: underline;
         }
+        .success-message, .error-message {
+            text-align: center;
+            font-weight: bold;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px auto;
+            max-width: 400px;
+        }
+        .success-message {
+            color: #fff;
+            background-color: #28a745;
+        }
+        .error-message {
+            color: #fff;
+            background-color: #dc3545;
+        }
         @media (max-width: 600px) {
             form {
                 width: 90%;
@@ -96,6 +112,9 @@
             남은 연차 보러가기
         </a></p>
     </div>
+
+    <!-- 사용자 메시지 -->
+    <div id="messageContainer"></div>
 
     <form id="leaveRequestForm">
         <label for="name">이름</label>
@@ -121,10 +140,16 @@
         <p class="form-footer">* 모든 필수 항목을 입력해주세요.</p>
     </form>
 
-
-
     <script>
-
+        // 메시지 표시 함수
+        function showMessage(message, type = 'success') {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = ''; // 기존 메시지 지움
+            const div = document.createElement('div');
+            div.className = type === 'success' ? 'success-message' : 'error-message';
+            div.textContent = message;
+            messageContainer.appendChild(div);
+        }
 
         // 폼 제출 이벤트
         const form = document.getElementById('leaveRequestForm');
@@ -136,7 +161,7 @@
             console.log("전송 데이터:", data); // 디버깅용 출력
 
             try {
-                await fetch('api/exec', {
+                const response = await fetch('https://script.google.com/macros/s/AKfycbxxxxxxx/exec', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -144,15 +169,19 @@
                     body: JSON.stringify(data),
                 });
 
-                // 성공적으로 데이터 전송 후 사용자 피드백
-                alert('연차 신청이 완료되었습니다!');
-                form.reset();
+                if (response.ok) {
+                    const result = await response.json();
+                    showMessage(result.message || '연차 신청이 완료되었습니다!', 'success');
+                    form.reset();
+                } else {
+                    const result = await response.json();
+                    showMessage(result.error || '연차 신청에 실패했습니다.', 'error');
+                }
             } catch (error) {
                 console.error("Error 발생:", error);
+                showMessage('네트워크 오류가 발생했습니다.', 'error');
             }
         });
     </script>
 </body>
 </html>
-
-
