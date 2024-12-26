@@ -121,42 +121,40 @@
         <p class="form-footer">* 모든 필수 항목을 입력해주세요.</p>
     </form>
 
-   <script>
-    const form = document.getElementById('leaveRequestForm');
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // 기본 동작 방지
-        const formData = new FormData(form);
-        const data = Object.fromEntries(formData.entries());
+    <script>
+        // 폼 제출 이벤트
+        const form = document.getElementById('leaveRequestForm');
+form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
 
-        console.log("전송 데이터:", data); // 디버깅용 출력
+    console.log("전송 데이터:", data);
 
-        try {
-            // 서버에 POST 요청
-            const response = await fetch('api/exec', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(data),
-            });
+    try {
+        const response = await fetch('api/exec', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        });
 
-            const result = await response.json();
+        const result = await response.json();
 
-            if (result.exists) {
-                // 중복 값이 있으면 알림
-                alert('이미 신청된 연차입니다!');
-            } else {
-                // 성공적으로 데이터 전송 후 사용자 피드백
-                alert('연차 신청이 완료되었습니다!');
-                form.reset(); // 폼 초기화
-            }
-        } catch (error) {
-            console.error("Error 발생:", error); // 디버깅용
+        if (result.exists) {
+            alert('이미 신청된 연차입니다!');
+        } else {
             alert('연차 신청이 완료되었습니다!');
+            form.reset();
         }
-    });
-</script>
+    } catch (error) {
+        console.error("Error 발생:", error);
+        alert('연차 신청이 완료되었습니다!');
+    }
+});
 
+    </script>
 </body>
 </html>
 
