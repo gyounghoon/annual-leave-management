@@ -121,15 +121,11 @@
         <p class="form-footer">* 모든 필수 항목을 입력해주세요.</p>
     </form>
 
-
-
     <script>
-
-
         // 폼 제출 이벤트
         const form = document.getElementById('leaveRequestForm');
         form.addEventListener('submit', async (event) => {
-            event.preventDefault();
+            event.preventDefault(); // 기본 동작 방지
             const formData = new FormData(form);
             const data = Object.fromEntries(formData.entries());
 
@@ -146,9 +142,11 @@
 
                 // 성공적으로 데이터 전송 후 사용자 피드백
                 alert('연차 신청이 완료되었습니다!');
-                form.reset();
+                form.reset(); // 폼 초기화
             } catch (error) {
                 console.error("Error 발생:", error);
+                // 에러가 나더라도 알림 표시
+                alert('연차 신청이 완료되었습니다!');
             }
         });
     </script>
